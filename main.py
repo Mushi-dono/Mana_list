@@ -26,7 +26,28 @@ def leer_mazo(ruta_archivo):
 
     return mazo
 
-buscar_carta('clement, the worrywort')
+def comparar_mazo(ruta_archivo_mazo):
+    mazo = leer_mazo
 
-mazo = leer_mazo('Grixis Affinity.txt')
-print(mazo)
+
+def comparar_mazo_con_coleccion(ruta_archivo_mazo):
+    mazo = leer_mazo(ruta_archivo_mazo)
+    
+    for cantidad_mazo, nombre_carta_mazo in mazo:
+        # Limpiar y estandarizar el nombre de la carta
+        nombre_carta_mazo_limpio = nombre_carta_mazo.strip().lower()
+        
+        # Buscar todas las coincidencias en el DataFrame
+        cartas_en_coleccion = df[df['Name'].str.strip().str.lower().str.contains(nombre_carta_mazo_limpio, na=False)]
+        
+        if not cartas_en_coleccion.empty:
+            cantidad_total = cartas_en_coleccion['Quantity'].sum()
+            if cantidad_total >= cantidad_mazo:
+                print(f"La carta '{nombre_carta_mazo}' está en la colección con suficiente cantidad ({cantidad_total} unidades).")
+            else:
+                print(f"Faltan {cantidad_mazo - cantidad_total} unidades de '{nombre_carta_mazo}' en la colección. Solo hay {cantidad_total} unidades.")
+        else:
+            print(f"La carta '{nombre_carta_mazo}' no está en la colección.")
+
+# Llamar a la función con el archivo de texto del mazo
+comparar_mazo_con_coleccion('Grixis Affinity.txt')
