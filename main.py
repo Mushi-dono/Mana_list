@@ -10,9 +10,9 @@ def buscar_carta(nombre_carta):
     if not carta.empty:
         # Mostrar los resultados
         for index, row in carta.iterrows():
-            print(f"---Carta: {row['Name']}--- \n\tCantidad: {row['Quantity']} \n\tCarpeta: {row['Binder Name']}\n")
+            print(f"\n---Carta: {row['Name']}--- \n\tCantidad: {row['Quantity']} \n\tCarpeta: {row['Binder Name']}\n")
     else:
-        print(f"No se encontró la carta '{nombre_carta}' en la base de datos.")
+        print(f"\n\t---No se encontró la carta '{nombre_carta}' en la base de datos---")
 
 def leer_mazo(ruta_archivo):
     mazo=[]
@@ -68,8 +68,34 @@ def crear_buylist(ruta_archivo_mazo, ruta_archivo_salida):
     with open(ruta_archivo_salida, 'w') as archivo_salida:
         for carta_faltante in cartas_faltantes:
             archivo_salida.write(carta_faltante + '\n')
-                
 
+def menu():
+    print("\n--Mana List--")
+    print("1. Buscar una carta en la colección")
+    print("2. Comparar una lista de un Deck con la colección")
+    print("3. Crear una buylist")
+    print("4. Salir\n")
 
-# Llamar a la función con las rutas de los archivos
-crear_buylist('Grixis Affinity.txt', 'cartas_faltantes.txt')
+def main():
+    while True:
+        menu()
+        opcion = input("Seleciona una opción:")
+
+        if opcion == '1':
+            nombre_carta= input("Introduzca el nombre de la carta: ")
+            buscar_carta(nombre_carta)
+        elif opcion == '2':
+            ruta_archivo_mazo = input("Introduzca la ruta del archivo del Deck: ")
+            comparar_mazo_con_coleccion(ruta_archivo_mazo)
+        elif opcion == '3':
+            ruta_archivo_mazo = input("Introduzca la ruta del archivo del Deck: ")
+            ruta_archivo_salida = input("¿Qué nombre tendrá la buylist?: ")
+            crear_buylist(ruta_archivo_mazo, ruta_archivo_salida)
+        elif opcion == '4':
+            print("\n\t**Saliendo del programa**\n")
+            break
+        else:
+            print("\n\t**Opción no disponible, inténtalo de nuevo**")
+
+if __name__ == "__main__":
+    main()
