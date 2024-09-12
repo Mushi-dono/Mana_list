@@ -14,4 +14,19 @@ def buscar_carta(nombre_carta):
     else:
         print(f"No se encontró la carta '{nombre_carta}' en la base de datos.")
 
+def leer_mazo(ruta_archivo):
+    mazo=[]
+
+    with open(ruta_archivo, 'r') as archivo:
+        for linea in archivo:
+            if linea.strip(): # Ignorar líneas vacías
+                # Separar la cantidad del nobmre de la carta
+                cantidad, nombre_carta = linea.strip().split(' ', 1)
+                mazo.append((int(cantidad), nombre_carta))
+
+    return mazo
+
 buscar_carta('clement, the worrywort')
+
+mazo = leer_mazo('Grixis Affinity.txt')
+print(mazo)
