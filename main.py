@@ -28,21 +28,43 @@ def leer_mazo(ruta_archivo):
 def comparar_mazo_con_coleccion(ruta_archivo_mazo):
     mazo = leer_mazo(ruta_archivo_mazo)
     
+    lista_suficientes = []
+    lista_mediollena = []
+    lista_faltantes = []
+
     for cantidad_mazo, nombre_carta_mazo in mazo:
         # Limpiar y estandarizar el nombre de la carta
         nombre_carta_mazo_limpio = nombre_carta_mazo.strip().lower()
         
         # Buscar todas las coincidencias en el DataFrame
         cartas_en_coleccion = df[df['Name'].str.strip().str.lower().str.contains(nombre_carta_mazo_limpio, na=False)]
-        
+
         if not cartas_en_coleccion.empty:
             cantidad_total = cartas_en_coleccion['Quantity'].sum()
             if cantidad_total >= cantidad_mazo:
-                print(f"La carta '{nombre_carta_mazo}' está en la colección con suficiente cantidad ({cantidad_total} unidades).")
+                lista_suficientes.append(f"{nombre_carta_mazo} [{cantidad_total}]")
+                #print(f"La carta '{nombre_carta_mazo}' está en la colección con [{cantidad_total}] unidades).")
             else:
-                print(f"Faltan {cantidad_mazo - cantidad_total} unidades de '{nombre_carta_mazo}' en la colección. Solo hay {cantidad_total} unidades.")
+                lista_mediollena.append(f"{nombre_carta_mazo}: \n\tDisponibles [{cantidad_total}] \n\tUnidades faltantes [{cantidad_mazo - cantidad_total}]")
+                #print(f"Faltan [{cantidad_mazo - cantidad_total}] unidades de '{nombre_carta_mazo}' en la colección. Solo hay {cantidad_total} unidades.")
         else:
-            print(f"La carta '{nombre_carta_mazo}' no está en la colección.")
+            lista_faltantes.append(f"{nombre_carta_mazo} [4]")
+            #print(f"La carta '{nombre_carta_mazo}' no está en la colección.")
+
+    print("\t---Lista cartas disponibles---")
+    for elemento in lista_suficientes:
+        print(elemento)
+    print("\n")
+
+    print("\t---Lista cartas a medio completar---")
+    for elemento in lista_mediollena:
+        print(elemento)
+    print("\n")
+
+    print("\t---Lista cartas faltantes---")
+    for elemento in lista_faltantes:
+        print(elemento)
+    print("\n")
 
 def crear_buylist(ruta_archivo_mazo, ruta_archivo_salida):
     mazo = leer_mazo(ruta_archivo_mazo)
@@ -80,13 +102,15 @@ def main():
     while True:
         menu()
         opcion = input("Seleciona una opción:")
-
         if opcion == '1':
             nombre_carta= input("Introduzca el nombre de la carta: ")
             buscar_carta(nombre_carta)
         elif opcion == '2':
-            ruta_archivo_mazo = input("Introduzca la ruta del archivo del Deck: ")
-            comparar_mazo_con_coleccion(ruta_archivo_mazo)
+            try:
+                ruta_archivo_mazo = input("Introduzca la ruta del archivo del Deck: ")
+                comparar_mazo_con_coleccion(ruta_archivo_mazo)
+            except:
+                print("\n\t**Opción no disponible, inténtalo de nuevo**")
         elif opcion == '3':
             ruta_archivo_mazo = input("Introduzca la ruta del archivo del Deck: ")
             ruta_archivo_salida = input("¿Qué nombre tendrá la buylist?: ")
