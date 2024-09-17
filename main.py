@@ -1,4 +1,5 @@
 import pandas as pd
+import os
 
 from config import Config as cf
 
@@ -27,6 +28,10 @@ def leer_mazo(ruta_archivo):
                 mazo.append((int(cantidad), nombre_carta))
     return mazo
 
+def guardar_en_escritorio(nombre_archivo):
+    """Devuelve la ruta completa para guardar el archivo en el escritorio"""
+    escritorio = os.path.join(os.path.expanduser("~"), "Desktop") # Obtiene la ruta del escritorio
+    return os.path.join(escritorio, nombre_archivo) # Devuelve la ruta completa del archivo
 
 def comparar_mazo_con_coleccion(ruta_archivo_mazo):
     """Compara el mazo importado con el CSV de la colección"""
@@ -71,7 +76,8 @@ def comparar_mazo_con_coleccion(ruta_archivo_mazo):
     # Crear una buylist
     pregunta = input(f"\n\t¿Quieres crear una buylist? (y/n): ")
     if pregunta.lower() == 'y':
-        ruta_salida = input("¿Qué nombre quieres que tenga tu buylist?: ")
+        nombre_archivo = input("¿Qué nombre quieres que tenga tu buylist?: ") + ".txt" # Añadida extensión del archivo
+        ruta_salida = guardar_en_escritorio(nombre_archivo)
 
         with open(ruta_salida, 'w') as archivo_salida:
             # Añadir título para diferenciar
