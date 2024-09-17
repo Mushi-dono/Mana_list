@@ -1,55 +1,9 @@
 import pandas as pd
 
-# Cargar archivo CSV
-df = pd.read_csv('ManaBox_Collection.csv')
+from config import Config as cf
 
-def cargar_ruta_csv():
-    """Carga la ruta almacenada en un archivo"""
-    try:
-        with open('ruta_csv.txt', 'r') as archivo:
-            ruta = archivo.read().strip() # Leer la ruta del archivo
-            return ruta
-    except FileNotFoundError:
-        return None
-    
-def guardar_ruta_csv(ruta):
-    """Guardar la ruta en un archivo para futuras ejecuciones"""
-    with open('ruta_csv.txt', 'w') as archivo:
-        archivo.write(ruta)
-
-def validar_csv(ruta):
-    """Verificar si la ruta proporcionada es un archivo CSV válido"""
-    try:
-        pd.read_csv(ruta) # Intentar cargar el CSV para verificar si es válido
-        return True
-    except Exception:
-        return False
-    
-def cargar_o_pedir_ruta_csv():
-    """Cargar la ruta del archivo CSV o pedirla si no está almacenada"""
-    # 1. Cargar la ruta almacenada en 'ruta_csv.txt'
-    ruta_csv = cargar_ruta_csv()
-
-    # 2. Si la ruta existe y el archivo CSV es válido se devuelve la ruta
-    if ruta_csv and validar_csv(ruta_csv):
-        print(f"\nCargando colección desde {ruta_csv}")
-        return ruta_csv
-    else:
-        # 3. Si no hay ruta guardada o el CSV no es válido se pide una nueva ruta
-        while True:
-            ruta_csv = input("Introduzca la ruta del archivo CSV de la colección: ")
-
-            # 4. Validar la nueva ruta
-            if validar_csv(ruta_csv):
-                guardar_ruta_csv(ruta_csv) # Guardar la ruta en 'ruta_csv.txt'
-                print(f"\nRuta del archivo CSV guardada: {ruta_csv}")
-                return ruta_csv
-            else:
-                print("\n\t**El archivo no es válido inténtalo de nuevo.")
-
-
-# funciones del programa
 def buscar_carta(nombre_carta):
+    """Busca una carta en la colección"""
     # Filtrar por el nombre de la carta
     carta = df[df['Name'].str.contains(nombre_carta, case=False)]
 
@@ -62,6 +16,7 @@ def buscar_carta(nombre_carta):
 
 
 def leer_mazo(ruta_archivo):
+    """Revisa el mazo importado"""
     mazo=[]
 
     with open(ruta_archivo, 'r') as archivo:
@@ -74,6 +29,7 @@ def leer_mazo(ruta_archivo):
 
 
 def comparar_mazo_con_coleccion(ruta_archivo_mazo):
+    """Compara el mazo importado con el CSV de la colección"""
     mazo = leer_mazo(ruta_archivo_mazo)
     
     # Listas vacías
@@ -134,6 +90,7 @@ def comparar_mazo_con_coleccion(ruta_archivo_mazo):
 
 
 def menu():
+    """Define el menú al iniciar el programa"""
     print("\n--Mana List--")
     print("1. Buscar una carta en la colección")
     print("2. Comparar una lista de un Deck con la colección")
@@ -143,7 +100,7 @@ def main():
     global df
 
     # Cargar la ruta del CSV o pedir una nueva si no existe
-    ruta_csv = cargar_o_pedir_ruta_csv()
+    ruta_csv = cf.cargar_o_pedir_ruta_csv()
 
     # Cargar el archivo CSV en un DataFrame
     df = pd.read_csv(ruta_csv)
