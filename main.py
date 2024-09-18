@@ -100,16 +100,11 @@ def menu():
     print("\n--Mana List--")
     print("1. Buscar una carta en la colección")
     print("2. Comparar una lista de un Deck con la colección")
-    print("3. Salir\n")
+    print("3. Actualiza la DataBase de la colección")
+    print("4. Salir\n")
 
 def main():
     global df
-
-    # Cargar la ruta del CSV o pedir una nueva si no existe
-    #ruta_csv = cf.cargar_o_pedir_ruta_csv()
-
-    # Cargar el archivo CSV en un DataFrame
-    #df = pd.read_csv(ruta_csv)
 
     ruta_coleccion = cf.cargar_o_pedir_coleccion()
     df = ruta_coleccion
@@ -130,6 +125,9 @@ def main():
             except Exception as e:
                 print(f"\n\t**Error inesperado {e}**")
         elif opcion == '3':
+            cf.actualizar_coleccion()
+            df = cf.cargar_coleccion() # Recargar el Dataframe después de actualizar
+        elif opcion == '4':
             print("\n\t**Saliendo del programa**\n")
             break
         else:

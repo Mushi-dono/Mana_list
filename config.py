@@ -18,7 +18,7 @@ class Config:
         print("\t---No existe un archivo de colección, sigue las instrucciones para importarlo---")
         print("-Coloca el archivo a importar en el escritorio")
         try:
-            orden = input("-A continuación introduce el nombre del archivo: ")
+            orden = input("-A continuación introduce el nombre del archivo (sin extensión): ")
         except FileExistsError:
             print(f"\t**El archivo {orden} no eciste, inténtelo de nuevo**")
 
