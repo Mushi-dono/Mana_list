@@ -106,10 +106,13 @@ def main():
     global df
 
     # Cargar la ruta del CSV o pedir una nueva si no existe
-    ruta_csv = cf.cargar_o_pedir_ruta_csv()
+    #ruta_csv = cf.cargar_o_pedir_ruta_csv()
 
     # Cargar el archivo CSV en un DataFrame
-    df = pd.read_csv(ruta_csv)
+    #df = pd.read_csv(ruta_csv)
+
+    ruta_coleccion = cf.cargar_o_pedir_coleccion()
+    df = ruta_coleccion
 
 
     while True:

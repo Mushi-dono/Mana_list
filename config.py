@@ -1,22 +1,43 @@
 import pandas as pd
+import os
+import shutil
 
 class Config:
     """Establece la configuración general"""
-    def cargar_ruta_csv():
-        """Carga la ruta almacenada en un archivo"""
+
+    def copia_coleccion():
+        """Hace una copia en el directorio del programa de la base de datos"""
+        
+        # Busca el archivo CSV en el escritorio independientemente del sistema operativo PENDIENTE DE ACTUALIZAR EN EL PASO A APLICACION
+        directorio_usuario = os.path.expanduser('~')
+        if os.name == 'nt': # Para Windows
+            escritorio = os.path.join(directorio_usuario, 'Desktop')
+        else: # Para macOS o Linux
+            escritorio = os.path.join(directorio_usuario, 'Escritorio')
+
+        print("\t---No existe un archivo de colección, sigue las instrucciones para importarlo---")
+        print("-Coloca el archivo a importar en el escritorio")
         try:
-            with open('ruta_csv.txt', 'r') as archivo:
-                ruta = archivo.read().strip() # Leer la ruta del archivo
-                return ruta
-        except FileNotFoundError:
+            orden = input("-A continuación introduce el nombre del archivo: ")
+        except FileExistsError:
+            print(f"\t**El archivo {orden} no eciste, inténtelo de nuevo**")
+
+        # Copia la colección en la base de datos del programa
+        origen = os.path.join(escritorio, orden + '.csv')
+        destino = 'coleccion.csv'
+        shutil.copy(origen, destino)
+
+    def cargar_coleccion():
+        """Carga la colección"""
+        ruta = 'coleccion.csv'
+        try:
+            df = pd.read_csv(ruta) # Intentar cargar el CSV
+            return df
+        except Exception as e:
+            print(f"Error al cargar el archivo {e}")
             return None
         
-    def guardar_ruta_csv(ruta):
-        """Guardar la ruta en un archivo para futuras ejecuciones"""
-        with open('ruta_csv.txt', 'w') as archivo:
-            archivo.write(ruta)
-
-    def validar_csv(ruta):
+    def comprobar_csv(ruta):
         """Verificar si la ruta proporcionada es un archivo CSV válido"""
         try:
             pd.read_csv(ruta) # Intentar cargar el CSV para verificar si es válido
@@ -24,24 +45,11 @@ class Config:
         except Exception:
             return False
         
-    def cargar_o_pedir_ruta_csv():
-        """Cargar la ruta del archivo CSV o pedirla si no está almacenada"""
-        # 1. Cargar la ruta almacenada en 'ruta_csv.txt'
-        ruta_csv = Config.cargar_ruta_csv()
+    def cargar_o_pedir_coleccion():
+        df = Config.cargar_coleccion()
 
-        # 2. Si la ruta existe y el archivo CSV es válido se devuelve la ruta
-        if ruta_csv and Config.validar_csv(ruta_csv):
-            print(f"\nCargando colección desde {ruta_csv}")
-            return ruta_csv
+        if df is not None:
+            return df
         else:
-            # 3. Si no hay ruta guardada o el CSV no es válido se pide una nueva ruta
-            while True:
-                ruta_csv = input("Introduzca la ruta del archivo CSV de la colección: ")
-
-                # 4. Validar la nueva ruta
-                if Config.validar_csv(ruta_csv):
-                    Config.guardar_ruta_csv(ruta_csv) # Guardar la ruta en 'ruta_csv.txt'
-                    print(f"\nRuta del archivo CSV guardada: {ruta_csv}")
-                    return ruta_csv
-                else:
-                    print("\n\t**El archivo no es válido inténtalo de nuevo.")
+            Config.copia_coleccion()
+            return Config.cargar_coleccion()
