@@ -1,6 +1,6 @@
 import pandas as pd
 import os
-from config import Config as cf
+from collection_service import Config as cf
 
 ruta_coleccion = cf.cargar_o_pedir_coleccion()
 df = ruta_coleccion

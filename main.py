@@ -1,11 +1,8 @@
 import pandas as pd
 import os
 
-from config import Config as cf
-from funciones import Funciones as fn
-
-
-
+from collection_service import Config as cf
+from file_service import Funciones as fn
 
 def menu():
     """Define el menú al iniciar el programa"""

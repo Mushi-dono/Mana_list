@@ -44,7 +44,31 @@ class Config:
             return True
         except Exception:
             return False
+
+    def actualizar_coleccion():
+        """Actualiza el archivo de la colección"""
+        directorio_usuario = os.path.expanduser('~')
+        if os.name == 'nt': # Para Windows
+            escritorio = os.path.join(directorio_usuario, 'Desktop')
+        else: # Para macOS o Linux
+            escritorio = os.path.join(directorio_usuario, 'Escritorio')
+
+        print("Coloca el nuevo archivo de la colección en el escritorio")
+        orden = input("Introduce el nombre del nuevo archivo CSV (sin extension): ")
+
+        # Definir origen y destino
+        origen = os.path.join(escritorio, orden + '.csv')
+        destino = 'coleccion.csv'
         
+        # Realizar la copia (sobreescribiendo el archivo actual)
+        try:
+            shutil.copy(origen, destino)
+            print(f"\nColección actualizada con el archivo {origen}.")
+        except FileNotFoundError:
+            print(f"\nEl archivo {origen} no se encontró. Verifica el nombre.")
+        except Exception as e:
+            print(f"\nOcurrió un error al intentar actualizar la colección: {e}")
+
     def cargar_o_pedir_coleccion():
         df = Config.cargar_coleccion()
 
