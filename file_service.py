@@ -99,3 +99,33 @@ class Funciones:
                 print(f'Buylist: "{ruta_salida}" creada con éxito.')
         else:
             print("\n\t**Opción no disponible, inténtalo de nuevo**")
+
+    def manabox_lista(ruta_archivo_mazo):
+        """Prepara e exporta una lista para ManaBox"""
+        mazo = Funciones.leer_mazo(ruta_archivo_mazo)
+
+        lista_manabox = []
+
+        for cantidad_mazo, nombre_carta_mazo in mazo:
+            # Limpiar y estandarizar el nombre de la carta
+            nombre_carta_mazo_limpio = nombre_carta_mazo.strip().lower()
+            
+            # Buscar todas las coincidencias en el DataFrame
+            cartas_en_coleccion = df[df['Name'].str.strip().str.lower().str.contains(nombre_carta_mazo_limpio, na=False)]
+
+            # Completar listas con mazo
+            if not cartas_en_coleccion.empty:
+                cantidad_total = cartas_en_coleccion['Quantity'].sum()
+                if cantidad_total <= cantidad_mazo:
+                    lista_manabox.append(f"{cantidad_mazo - cantidad_total} {nombre_carta_mazo}")
+            else:
+                lista_manabox.append(f"4 {nombre_carta_mazo}")
+
+        nombre_archivo = input(f"¿Qué nombre quieres poner a tu lista?: ") + '.txt'
+        ruta_salida = Funciones.guardar_en_escritorio(nombre_archivo)
+
+        with open(ruta_salida, 'w') as archivo_salida:
+            for elemento in lista_manabox:
+                    archivo_salida.write(elemento + '\n')
+                
+        print(f'Buylist: "{ruta_salida}" creada con éxito.')
